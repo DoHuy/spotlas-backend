@@ -1,0 +1,27 @@
+version: '3'
+services:
+  database:
+    container_name: database
+    image:  postgis/postgis:13-master
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./data-volume:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=spotlas
+      - POSTGRES_USER=spotlas
+      - POSTGRES_PASSWORD=spotlas
+    networks:
+      - backend
+  api:
+    build:
+      context: ./task2
+    ports:
+      - "3000:3000"
+    networks:
+      - backend
+    depends_on:
+      - database
+networks:
+  backend:
+    driver: bridge
